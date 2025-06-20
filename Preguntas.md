@@ -4,7 +4,8 @@
 ## 1. Dataset y Preprocesamiento
 - ¿Por qué es necesario redimensionar las imágenes a un tamaño fijo para una MLP?
 
-Las entradas asociadas a una MLP son de una dimension vectorial determinada.
+Las entradas asociadas a una MLP son de una dimension vectorial determinada. 
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 
 - ¿Qué ventajas ofrece Albumentations frente a otras librerías de transformación como `torchvision.transforms`?
 
@@ -36,6 +37,7 @@ Tiene muchisima ventaja frente a las funciones sigmoide y tangente hiperbolico.
 
 - ¿Qué parámetro del modelo deberíamos cambiar si aumentamos el tamaño de entrada de la imagen?
 
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 
 ## 3. Entrenamiento y Optimización
 - ¿Qué hace `optimizer.zero_grad()`?
@@ -78,28 +80,40 @@ La matriz de confusion es ideal para problemas de clasificacion multiclase. La a
 - ¿Qué ventajas tiene usar TensorBoard durante el entrenamiento?
 
 
+
 - ¿Qué diferencias hay entre loguear `add_scalar`, `add_image` y `add_text`?
 
 
+
 - ¿Por qué es útil guardar visualmente las imágenes de validación en TensorBoard?
+
 
 
 - ¿Cómo se puede comparar el desempeño de distintos experimentos en TensorBoard?
 
 
 
+
 ## 6. Generalización y Transferencia
 - ¿Qué cambios habría que hacer si quisiéramos aplicar este mismo modelo a un dataset con 100 clases?
 
+El codigo resulta estructurado con la generalidad suficiente de forma tal que al extender el dataset con el mismo formato utilizado, a uno con 100 clases, y la leve modificacion en la clase:
+class MLPClassifier(nn.Module):
+    def __init__(self, input_size=64*64*3, num_classes=***100***):
+
+Deberia ser suficiente para adaptar el modelo a una cantidad mas amplia de clases.
 
 - ¿Por qué una CNN suele ser más adecuada que una MLP para clasificación de imágenes?
 
+Las redes neuronales convolucionales (CNNs) son más adecuadas que las MLPs para clasificación de imágenes porque aprovechan la estructura espacial de los datos. A diferencia de las MLPs, que tratan cada píxel como una entrada independiente, las CNNs trabajan con regiones locales de la imagen y conservan relaciones espaciales. Utilizan filtros convolucionales que detectan patrones como bordes, texturas y formas básicas en distintas posiciones. Estos filtros comparten pesos, lo que reduce significativamente la cantidad de parámetros y mejora la eficiencia del modelo. Además, esta estructura permite que las CNNs sean naturalmente invariantes a traslaciones, es decir, que puedan reconocer un objeto aunque cambie de ubicación. A medida que se avanza en las capas, las CNNs construyen representaciones jerárquicas que capturan características más abstractas. Esto favorece una mejor generalización y una mayor capacidad para aprender conceptos complejos. Por estas razones, las CNNs son hoy la arquitectura de referencia en tareas de visión por computadora y clasificacion de imagenes.
 
 - ¿Qué problema podríamos tener si entrenamos este modelo con muy pocas imágenes por clase?
 
+Overfitting es un problema extremadamente comun cuando se hace uso de un dataset lo suficientemente pequeno. 
 
 - ¿Cómo podríamos adaptar este pipeline para imágenes en escala de grises?
 
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 
 
 ## 7. Regularización
