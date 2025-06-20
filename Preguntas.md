@@ -37,8 +37,6 @@ Tiene muchisima ventaja frente a las funciones sigmoide y tangente hiperbolico.
 - ¿Qué parámetro del modelo deberíamos cambiar si aumentamos el tamaño de entrada de la imagen?
 
 
-
-
 ## 3. Entrenamiento y Optimización
 - ¿Qué hace `optimizer.zero_grad()`?
 
@@ -60,16 +58,21 @@ Muestra un caso tipico de OVERFITTING. Aunque no es necesariamente el caso, por 
 
 - ¿Qué otras métricas podrían ser más relevantes que accuracy en un problema real?
 
+La diferencia en importancia en metricas recide directamente en el peligro de cometer un falso positivo contra un falso negativo. Caracterizar al modelo con una metrica que perciba el peso e importancia de cada error es sumamente importante en las aplicaciones del mundo real (medicina, militar, etc.).
 
+La precision de un modelo provee una metrica de la accuracy de las predicciones positivas correctas sobre una clase, con respecto a la cantidad total de predicciones positivas (Correctas e incorrectas) realizadas sobre esa clase (True positive / (True positive + False Positive)).
+
+La metrica Recall en cambio, prove una metrica del accuracy de las predicciones correctas sobre una clase, con respecto a la cantidad de predicciones correctas sobre esa clase + la cantidad de predicciones hechas de manera incorrecta sobre esa clase (True Positive / (True positive + False Negative))
+
+f1-score es un promedio armonico entre la precision y el recall. Cuando tanto el error del falso positivo como falso negativo tienen un peso similar, el f1-score es una metrica de alta calidad.
 
 - ¿Qué información útil nos da una matriz de confusión que no nos da la accuracy?
 
-
+La matriz de confusion es ideal para problemas de clasificacion multiclase. La accuracy es una metrica adimensional, que no provee informacion detallada sobre donde esta fallando el modelo; es decir, como se distribuye el error en accuracy en las predicciones realizadas. La matriz de confusion resuelve justamente dicho problema. En las filas, muestra el "true value", y en las columnas el "predicted value", de forma tal que es posible encontrar cuales son las clases mas problematicas en el modelo. Muchisima informacion estadistica sobre los errores cometidos en cada clase puede ser extraida de dicha matriz.
 
 - En el reporte de clasificación, ¿qué representan `precision`, `recall` y `f1-score`?
 
-
-
+(Respuesta de pregunta 1)
 
 ## 5. TensorBoard y Logging 
 - ¿Qué ventajas tiene usar TensorBoard durante el entrenamiento?
