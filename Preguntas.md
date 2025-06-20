@@ -42,19 +42,16 @@ Tiene muchisima ventaja frente a las funciones sigmoide y tangente hiperbolico.
 ## 3. Entrenamiento y Optimización
 - ¿Qué hace `optimizer.zero_grad()`?
 
-
+Resetea los gradientes almacenados en el optimizador. Si no lo hiciéramos, se acumularían de iteraciones previas.
 
 - ¿Por qué usamos `CrossEntropyLoss()` en este caso?
 
-
+El problema a resolver con este MLP se resume en la clasificacion Multiclase de un dataset. La funcion de perdida de Cross Entropy es clave para encarar dicho problema. Su impelemntacion combina las ventajas de LogSoftmax y NLL en una funcion.
 
 - ¿Cómo afecta la elección del tamaño de batch (`batch_size`) al entrenamiento?
 
-
-
 - ¿Qué pasaría si no usamos `model.eval()` durante la validación?
-
-
+El loop de entrenamiento no funcionaria como tal. El modelo no se evaluaria como tal con los nuevos parametros calculados en el ulitmo batch, y el MLP estaria basicamente estancado en un conjunto de parametros invariantes, generados en la primer iteracion de entrenamiento. 
 
 ## 4. Validación y Evaluación
 - ¿Qué significa una accuracy del 70% en validación pero 90% en entrenamiento?
