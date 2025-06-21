@@ -5,7 +5,6 @@
 - ¿Por qué es necesario redimensionar las imágenes a un tamaño fijo para una MLP?
 
 Las entradas asociadas a una MLP son de una dimension vectorial determinada. 
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 
 - ¿Qué ventajas ofrece Albumentations frente a otras librerías de transformación como `torchvision.transforms`?
 
@@ -21,7 +20,8 @@ Transforma de formato numpy (H, W, C) a formato aceptable por pytorch (C, H, W) 
 ## 2. Arquitectura del Modelo
 - ¿Por qué usamos una red MLP en lugar de una CNN aquí? ¿Qué limitaciones tiene?
 
-MLP en principio no posee invarianza sobre shifteos, rotaciones, y en general cualquier tipo de modificaciones sobre la entrada. CONTINUAR
+Usamos una MLP en lugar de una CNN aquí por simplicidad y porque el tamaño reducido de las imágenes permite que la red aprenda sin explotar estructura espacial. Sin embargo, las MLP no son invariantes a traslaciones, rotaciones ni deformaciones, ya que tratan los píxeles como vectores planos y pierden la relación espacial entre ellos. Esto las limita frente a tareas visuales complejas donde las CNN tienen una clara ventaja.
+
 
 - ¿Qué hace la capa `Flatten()` al principio de la red?
 Transformacion del tensor de tamano (C, H, W), en un vector de tamano (C x H x W).
@@ -78,20 +78,16 @@ La matriz de confusion es ideal para problemas de clasificacion multiclase. La a
 
 ## 5. TensorBoard y Logging 
 - ¿Qué ventajas tiene usar TensorBoard durante el entrenamiento?
+TensorBoard permite visualizar en tiempo real el progreso del entrenamiento, incluyendo la evolución de la pérdida, la precisión y otros indicadores relevantes. Facilita detectar rápidamente problemas como overfitting, underfitting o estancamiento del modelo. Además, ayuda a comparar distintos experimentos y tomar decisiones informadas sobre los hiperparámetros.
 
-
-
-- ¿Qué diferencias hay entre loguear `add_scalar`, `add_image` y `add_text`?
-
-
+- ¿Qué diferencias hay entre loguear add_scalar, add_image y add_text?
+add_scalar se usa para guardar valores numéricos como pérdida o precisión a lo largo de las épocas. add_image permite guardar imágenes (por ejemplo, muestras de entrada, salidas del modelo o máscaras), útiles para visualizar resultados intermedios. add_text sirve para registrar descripciones, etiquetas, estructuras del modelo o comentarios sobre los experimentos.
 
 - ¿Por qué es útil guardar visualmente las imágenes de validación en TensorBoard?
-
-
+Porque permite inspeccionar si las predicciones del modelo tienen sentido cualitativamente, más allá de los números. También ayuda a identificar fallos específicos, patrones de error o sesgos que no son evidentes solo con métricas agregadas.
 
 - ¿Cómo se puede comparar el desempeño de distintos experimentos en TensorBoard?
-
-
+Al guardar cada ejecución en un directorio diferente (log_dir único por experimento), TensorBoard puede cargar y visualizar múltiples runs al mismo tiempo. Esto permite superponer las curvas de pérdida, precisión u otras métricas, y así comparar directamente el comportamiento de distintos modelos o configuraciones de entrenamiento.
 
 
 ## 6. Generalización y Transferencia
@@ -137,16 +133,16 @@ Batch norm es una tecnica de regularizacion que normaliza la entrada a las funci
 Sí, BatchNorm puede actuar como regularizador porque introduce variación entre batches durante el entrenamiento, forzando a la red a ser más robusta.En la práctica, reduce el sobreajuste, y en algunos casos, incluso permite prescindir de Dropout.
 
 - ¿Qué efectos visuales podrías observar en TensorBoard si hay overfitting?
-
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+Se puede observar que la pérdida en el conjunto de entrenamiento disminuye continuamente, mientras que la pérdida en validación comienza a aumentar después de cierto punto. Además, la precisión en entrenamiento se mantiene alta, pero la precisión en validación se estanca o empeora, lo cual indica que el modelo está memorizando en lugar de generalizar.
 
 - ¿Cómo ayuda la regularización a mejorar la generalización del modelo?
-
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+La regularización impone restricciones al modelo, evitando que se ajuste demasiado a los datos de entrenamiento. Técnicas como L2, Dropout o BatchNorm reducen la complejidad del modelo o introducen ruido controlado, lo que fuerza a la red a aprender representaciones más robustas y menos dependientes de ejemplos específicos, mejorando así su desempeño en datos no vistos.
 
 ### Actividades de modificación:
 1. Agregar Dropout en la arquitectura MLP:
    - Insertar capas `nn.Dropout(p=0.5)` entre las capas lineales y activaciones.
+
+   ALMACENADO EN RUNS - SIMPLE_DROPOUT
 
    - Comparar los resultados con y sin `Dropout`.
 
@@ -181,18 +177,37 @@ xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 
 ### Preguntas prácticas:
 - ¿Qué efecto tuvo `BatchNorm` en la estabilidad y velocidad del entrenamiento?
+Amplia mejora con respecto a unicamente aplicar dropout, tanto en velocidad de convergencia como en accuracy total.
 - ¿Cambió la performance de validación al combinar `BatchNorm` con `Dropout`?
+Si, mejoro mucho con respecto al uso de unicamente dropout. Aumento mas de un 20% en su accuracy. Esto puede llegar a implicar que la topologia de una unica capa intermedia genera mucha dependencia en el MLP, por lo que quizas resulta mas beneficioso con una mayor cantidad de capas intermedias.
 - ¿Qué combinación de regularizadores dio mejores resultados en tus pruebas?
+Batch con L2 y augmentacion horizontal, brigthnesscontrast y shiftScaleRotate.
+
 - ¿Notaste cambios en la loss de entrenamiento al usar `BatchNorm`?
+xxxxxxxxxxxxxxxxxxxxxxxxxxxx
 
 ## 8. Inicialización de Parámetros
 
 ### Preguntas teóricas:
 - ¿Por qué es importante la inicialización de los pesos en una red neuronal?
+
+La inicialización de los pesos en una red neuronal es fundamental porque influye directamente en cómo se propagan las activaciones y los gradientes durante el entrenamiento. Una mala inicialización puede provocar que los gradientes se vuelvan muy pequeños o muy grandes, dificultando o incluso impidiendo el aprendizaje.
+
 - ¿Qué podría ocurrir si todos los pesos se inicializan con el mismo valor?
+
+Si todos los pesos se inicializan con el mismo valor, las neuronas dentro de una misma capa se comportan de forma idéntica y aprenden exactamente lo mismo, lo que rompe la simetría necesaria para que la red aprenda representaciones diversas y efectivas.
+
 - ¿Cuál es la diferencia entre las inicializaciones de Xavier (Glorot) y He?
+
+La diferencia entre las inicializaciones de Xavier y He radica en cómo calculan la varianza de los pesos. Xavier es ideal para funciones de activación simétricas como tanh o sigmoid, mientras que He usa está diseñada para ReLU, que no es simétrica y anula muchas activaciones.
+
 - ¿Por qué en una red con ReLU suele usarse la inicialización de He?
+
+En redes que utilizan ReLU, se prefiere la inicialización de He porque esta mantiene la varianza de las activaciones constante a lo largo de las capas, lo que evita que las activaciones y los gradientes se apaguen progresivamente y mejora la eficiencia del entrenamiento.
+
 - ¿Qué capas de una red requieren inicialización explícita y cuáles no?
+
+Las capas que contienen pesos entrenables, como Linear, Conv2d o Embedding, requieren inicialización explícita si se desea tener control total sobre el comportamiento de la red, aunque las librerías modernas como PyTorch aplican buenas inicializaciones por defecto. Las capas sin pesos, como ReLU, MaxPool o Dropout, no necesitan inicialización, ya que no tienen parámetros entrenables.
 
 ### Actividades de modificación:
 1. Agregar inicialización manual en el modelo:
@@ -220,6 +235,21 @@ xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 
 ### Preguntas prácticas:
 - ¿Qué diferencias notaste en la convergencia del modelo según la inicialización?
+
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+
 - ¿Alguna inicialización provocó inestabilidad (pérdida muy alta o NaNs)?
-- ¿Qué impacto tiene la inicialización sobre las métricas de validación?
+No. Ninguna lo provoco.
+
 - ¿Por qué `bias` se suele inicializar en cero?
+
+El bias suele inicializarse en cero porque no rompe la simetría del modelo y no afecta negativamente el flujo de los gradientes durante el entrenamiento. A diferencia de los pesos, que sí requieren inicialización cuidadosa para evitar que todas las neuronas aprendan lo mismo, el sesgo simplemente actúa como un desplazamiento y puede aprenderse correctamente aunque comience en cero.
+
+
+
+
+
+
+
+
+
