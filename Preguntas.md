@@ -120,12 +120,29 @@ xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 
 ### Preguntas teóricas:
 - ¿Qué es la regularización en el contexto del entrenamiento de redes neuronales?
+
+La regularización es un conjunto de técnicas utilizadas durante el entrenamiento para evitar que el modelo se adapte demasiado a los datos de entrenamiento, topologia de la red, y caracteristicas de hiperparametros, logrando así que generalice mejor a datos nuevos o no vistos.
+
 - ¿Cuál es la diferencia entre `Dropout` y regularización `L2` (weight decay)?
+
+Dropout es una tecnica de regularizacion que penaliza la sobre-dependencia de una topologia neurologica sobre sub-grafos / seccionees de la red o neuronas especificas para realizar predicciones. La tecnica consta en desactivar cierto conjunto de neuronas dentro de la red en cada iteracion de entrenamiento. Existen multiples algoritmos para la seleccion de las "Dropout neurons", pero una forma clasica recide en desactivar las neuronas con una probabilidad p en cada iteracion de entrenamiento.
+
+La tecnica de regularizacion L2 es una tecnica que aplica una penalización al valor de los pesos grandes. Esto fuerza al modelo a desarrollarse con pesos pequenos, lo que implica funciones de seleccion mas suaves, y reduce la incidencia al overfitting.
+
 - ¿Qué es `BatchNorm` y cómo ayuda a estabilizar el entrenamiento?
 - ¿Cómo se relaciona `BatchNorm` con la velocidad de convergencia?
 - ¿Puede `BatchNorm` actuar como regularizador? ¿Por qué?
+
+Batch norm es una tecnica de regularizacion que normaliza la entrada a las funciones de activacion en cada neurona. Batch Normalization normaliza las activaciones intermedias de cada capa para que tengan media cero y varianza uno, lo que estabiliza y acelera el entrenamiento. Esto evita que las distribuciones de activación cambien drásticamente entre batches, permitiendo usar learning rates más altos sin perder estabilidad. Además, al introducir pequeñas variaciones en las estadísticas de cada batch, actúa como una forma de regularización implícita que reduce el sobreajuste. También mantiene las activaciones en rangos donde las funciones no lineales, como ReLU o tanh, no se saturan, favoreciendo un flujo de gradientes más saludable. En resumen, BatchNorm mejora la velocidad, estabilidad y capacidad de generalización de las redes neuronales.
+Sí, BatchNorm puede actuar como regularizador porque introduce variación entre batches durante el entrenamiento, forzando a la red a ser más robusta.En la práctica, reduce el sobreajuste, y en algunos casos, incluso permite prescindir de Dropout.
+
 - ¿Qué efectos visuales podrías observar en TensorBoard si hay overfitting?
+
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+
 - ¿Cómo ayuda la regularización a mejorar la generalización del modelo?
+
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 
 ### Actividades de modificación:
 1. Agregar Dropout en la arquitectura MLP:
