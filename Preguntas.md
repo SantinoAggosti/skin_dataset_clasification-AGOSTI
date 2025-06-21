@@ -245,11 +245,5 @@ No. Ninguna lo provoco.
 
 El bias suele inicializarse en cero porque no rompe la simetría del modelo y no afecta negativamente el flujo de los gradientes durante el entrenamiento. A diferencia de los pesos, que sí requieren inicialización cuidadosa para evitar que todas las neuronas aprendan lo mismo, el sesgo simplemente actúa como un desplazamiento y puede aprenderse correctamente aunque comience en cero.
 
-
-
-
-
-
-
-
-
+OBSERVACION:
+Para los puntos practicos, hay diferentes modelos implementados enn el tensorboard donde cada nombre indica que tipo de modelo se trata y que punto de las preguntas trata. Adjunto a la entrega se visualizan varias imagenes donde se muestra lo explicado.
