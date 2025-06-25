@@ -2,8 +2,9 @@
 
 Imagenes de resultados de entramientos de diferentes redes neuronales utilizando TensorBoard.
 
-![alt text](https://ibb.co/svKpYsfP)
 
-![alt text](https://ibb.co/FbRNbvPC)
+![image](https://github.com/user-attachments/assets/f4f86759-94cd-444f-82f8-196ecd4b4a95)
 
-![alt text](https://ibb.co/cXMFx3Yq)
+![image](https://github.com/user-attachments/assets/d07308e3-e43d-4214-abb6-0019ebdb6db5)
+
+![image](https://github.com/user-attachments/assets/8a5f2dca-4240-4a6b-af31-e2107a6af808)
