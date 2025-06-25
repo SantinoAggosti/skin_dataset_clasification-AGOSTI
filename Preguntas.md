@@ -1,4 +1,3 @@
-
 # Preguntas sobre el ejemplo de clasificación de imágenes con PyTorch y MLP
 
 ## 1. Dataset y Preprocesamiento
@@ -37,7 +36,8 @@ Tiene muchisima ventaja frente a las funciones sigmoide y tangente hiperbolico.
 
 - ¿Qué parámetro del modelo deberíamos cambiar si aumentamos el tamaño de entrada de la imagen?
 
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+Se debe cambiar el parámetro `input_size` de la primera capa lineal del modelo (por ejemplo, en la clase `MLPClassifier`). Este parámetro debe coincidir con el nuevo tamaño total de píxeles de la imagen de entrada (alto × ancho × canales). Si la imagen pasa de 64x64 a 128x128 píxeles y sigue siendo RGB, el `input_size` debe actualizarse de `64*64*3`
+
 
 ## 3. Entrenamiento y Optimización
 - ¿Qué hace `optimizer.zero_grad()`?
@@ -109,8 +109,8 @@ Overfitting es un problema extremadamente comun cuando se hace uso de un dataset
 
 - ¿Cómo podríamos adaptar este pipeline para imágenes en escala de grises?
 
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-
+Para adaptar el pipeline a imágenes en escala de grises se deben realizar los siguientes cambios exactos:
+Al cargar las imágenes, utilizar `.convert("L")` en lugar de `"RGB"` para que cada imagen tenga un solo canal, luego modificar el modelo para que el tamaño de entrada sea `64*64*1` en vez de `64*64*3`, ya que ahora solo hay un canal. Cambiar el parámetro `input_size` en la clase `MLPClassifier` a `64*64*1`. Con estos cambios, el pipeline funcionará correctamente con imágenes en escala de grises.
 
 ## 7. Regularización
 
@@ -184,8 +184,7 @@ Si, mejoro mucho con respecto al uso de unicamente dropout. Aumento mas de un 20
 Batch con L2 y augmentacion horizontal, brigthnesscontrast y shiftScaleRotate.
 
 - ¿Notaste cambios en la loss de entrenamiento al usar `BatchNorm`?
-xxxxxxxxxxxxxxxxxxxxxxxxxxxx
-
+Definitivamente. La Loss al utilizar BatchNorm convergia mas rapidamente a un valor bajo, pero ademas comenzaba en un valor lo suficientemente bajo en comparacion a la falta de su uso.
 ## 8. Inicialización de Parámetros
 
 ### Preguntas teóricas:
@@ -233,10 +232,15 @@ Las capas que contienen pesos entrenables, como Linear, Conv2d o Embedding, requ
          writer.add_histogram(name, param, epoch)
      ```
 
+Me resulto de interes visualizarlo una vez modificados. Todo puede ser visto en el tensorboard.
+
 ### Preguntas prácticas:
 - ¿Qué diferencias notaste en la convergencia del modelo según la inicialización?
 
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+Las diferencias teóricas entre las estrategias de inicialización son las siguientes:
+- **Xavier (`nn.init.xavier_uniform_`)** está pensada para mantener la varianza de las activaciones constante a lo largo de las capas en redes con funciones de activación simétricas como tanh o sigmoid. Ayuda a evitar tanto la desaparición como la explosión del gradiente.
+- **He (`nn.init.kaiming_normal_`)** está optimizada para redes con activaciones ReLU, ya que considera que la mitad de las neuronas estarán apagadas. Permite que la varianza de las activaciones se mantenga estable en redes profundas con ReLU.
+- **Aleatoria uniforme (`nn.init.uniform_`)** simplemente asigna valores aleatorios dentro de un rango fijo, sin tener en cuenta la arquitectura ni la función de activación, por lo que puede ser menos eficiente en redes profundas. Sin embargo, en la práctica, al utilizar este modelo MLP relativamente simple y con pocas capas, no se observaron diferencias notables en estabilidad o convergencia del modelo.
 
 - ¿Alguna inicialización provocó inestabilidad (pérdida muy alta o NaNs)?
 No. Ninguna lo provoco.
@@ -245,5 +249,5 @@ No. Ninguna lo provoco.
 
 El bias suele inicializarse en cero porque no rompe la simetría del modelo y no afecta negativamente el flujo de los gradientes durante el entrenamiento. A diferencia de los pesos, que sí requieren inicialización cuidadosa para evitar que todas las neuronas aprendan lo mismo, el sesgo simplemente actúa como un desplazamiento y puede aprenderse correctamente aunque comience en cero.
 
-OBSERVACION:
-Para los puntos practicos, hay diferentes modelos implementados enn el tensorboard donde cada nombre indica que tipo de modelo se trata y que punto de las preguntas trata. Adjunto a la entrega se visualizan varias imagenes donde se muestra lo explicado.
+
+
