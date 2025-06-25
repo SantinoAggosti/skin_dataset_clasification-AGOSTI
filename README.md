@@ -1,10 +1,9 @@
-# skin-dataset-clasification  
+# Version de Entrega de TP-Integrador (Santino Agosti)
 
-Para generar el entorno
+Imagenes de resultados de entramientos de diferentes redes neuronales utilizando TensorBoard.
 
-``` 
-conda create -n {env}  
-conda activate {env}  
-conda install -c conda-forge python==3.12.3  
-pip install -f requirements.txt  
-``` 
+![alt text](https://ibb.co/svKpYsfP)
+
+![alt text](https://ibb.co/FbRNbvPC)
+
+![alt text](https://ibb.co/cXMFx3Yq)
